@@ -6,12 +6,10 @@ main {
 }
 main h1 {
   padding-bottom: 15px;
-  color: #00296b;
 }
 
 main .subtitle {
   font-size: 1.125rem;
-  color: #3d3d3d;
 }
 
 main .hero-img-wrapper {
@@ -38,16 +36,15 @@ main a {
   align-items: center;
   justify-content: space-between;
   gap: 40px;
+  /* flex-wrap: nowrap; */
   font-size: 1.5rem;
   font-weight: bold;
   padding: 80px 30px 80px 10px;
-  color: #3d3d3d;
 }
 .privacy {
   text-align: left;
   padding-right: 30px;
   width: min(95%, 550px);
-  color: #3d3d3d;
 }
 @keyframes pulse {
   from {

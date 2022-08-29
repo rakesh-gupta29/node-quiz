@@ -293,7 +293,7 @@ class Question {
     btn.className = "hidden-btn";
     queWrapper.addEventListener("submit", (event) => {
       event.preventDefault();
-      handleQueSubmission("next");
+      handleQueSubmission();
     });
     queWrapper.appendChild(btn);
     queWrapper.className = "wrapper";
@@ -388,15 +388,9 @@ const Ques = () => {
       const que = new Question(qIdx, data[qIdx]);
       mainNode.innerHTML = "";
       mainNode.appendChild(que);
-      const radioBtns = document.querySelectorAll("input[type=radio]");
-      radioBtns[0].checked = true;
-      radioBtns[0].focus();
-      radioBtns.forEach((element) => {
-        if (element.value === ansData[qIdx]) {
-          element.focus();
-          element.checked = true;
-        }
-      });
+      const radioBtns = document.querySelectorAll("input[type=radio]")[0];
+      radioBtns.checked = true;
+      radioBtns.focus();
     },
     moveNext() {
       setQidx((prev) => Math.min(Object.keys(data).length - 1, prev + 1));
@@ -430,25 +424,30 @@ const Progress = (idx) => {
 let que = React.render(Ques);
 let idx = que.provideIdx();
 let formProgress = React.render(() => Progress(idx));
-let canSubmit = false;
-prevBtn.addEventListener("click", () => handleQueSubmission("prev"));
-nextBtn.addEventListener("click", () => handleQueSubmission("next"));
 
-function handleQueSubmission(navigation) {
+prevBtn.addEventListener("click", () => {
+  que.movePrev();
+  React.render(Ques);
+  React.render(() => Progress(idx));
+});
+
+nextBtn.addEventListener("click", async () => {
+  await handleQueSubmission();
+});
+
+function handleQueSubmission() {
   let selected = null;
   radioBtns.forEach((i) => {
     if (i.checked) selected = i.value;
   });
 
   que.setAnsData({ [que.provideIdx()]: selected });
-  if (navigation == "next") que.moveNext();
-  else if (navigation === "prev") que.movePrev();
-  else return;
+  que.moveNext();
   que = React.render(Ques);
   React.render(() => Progress(idx));
   let allAns = que.getAnsData();
   if (Object.keys(allAns).length === 8) {
-    canSubmit = Object.keys(allAns).map((i) => {
+    let canSubmit = Object.keys(allAns).map((i) => {
       return allAns[i];
     });
     if (canSubmit) handleQueEnd();
